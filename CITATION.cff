@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+title: "Colletotrichum sublineola genome–virulence analysis pipeline"
+version: "1.0.0"
+message: "If you use this pipeline, please cite the associated manuscript."
+authors:
+  - family-names: "Ahn"
+    given-names: "Ezekiel Jin Sung"
+date-released: 2026-04-27

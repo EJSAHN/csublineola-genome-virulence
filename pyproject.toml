@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "colletotrichum-sublineola-pipeline"
+version = "1.0.0"
+description = "Reproducible analysis pipeline for genome-wide relatedness and virulence structure in Colletotrichum sublineola."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.1",
+    "numpy>=1.26",
+    "openpyxl>=3.1",
+    "biopython>=1.83",
+]
+
+[project.scripts]
+colletotrichum-sublineola-pipeline = "colletotrichum_sublineola_pipeline.run:main"
+
+[tool.setuptools]
+packages = ["colletotrichum_sublineola_pipeline"]
