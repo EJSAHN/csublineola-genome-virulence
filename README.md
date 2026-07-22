@@ -1,95 +1,61 @@
-# Colletotrichum sublineola genome–virulence analysis pipeline
+# C. sublineola marker–virulence concordance pipeline
 
-This repository contains a reproducible Python pipeline for comparing genome-wide relatedness, virulence-profile distance, and host-specific genomic signal in *Colletotrichum sublineola*.
+This repository contains the reproducible Python workflow used to compare a processed RAD-seq-derived marker alignment with differential-host virulence phenotypes in a defined *Colletotrichum sublineola* isolate panel.
 
-The workflow reads an aligned FASTA file and a binary host differential response matrix, calculates pairwise genomic and virulence distances, performs permutation-based matrix and host-specific analyses, screens candidate host-associated alignment sites, and exports traceable Excel workbooks for downstream manuscript preparation.
-
-## Repository scope
-
-This repository contains only the *C. sublineola* analysis pipeline. Figure-generation code, manuscript drafting files, generated workbooks, and unrelated pathogen analyses are intentionally excluded.
+The workflow calculates pairwise marker distances, pairwise virulence distances, permutation-based matrix correlations, and within- versus between-pathotype marker-distance summaries. It does **not** treat alignment columns as validated genomic coordinates and does not perform marker-discovery or causal-association analyses.
 
 ## Required inputs
 
-The command-line workflow expects:
+1. An equal-length FASTA alignment containing isolate marker profiles.
+2. A CSV, TSV, or Excel table containing an isolate identifier, an optional pathotype label, and host-differential responses encoded as `R` or `S`.
 
-1. An aligned FASTA file containing *C. sublineola* isolate sequences.
-2. A CSV or Excel virulence table with an `isolate_id` column and host differential columns encoded as `R` or `S`.
+Input data are not bundled with this repository because redistribution requires authorization from the original data custodians.
 
-Optional isolate metadata can be supplied with a separate table keyed by `isolate_id`.
-
-## Environment setup
-
-Using conda:
+## Environment
 
 ```bash
 conda env create -f environment.yml
-conda activate csublineola-genome-virulence
+conda activate csublineola-marker-virulence
 ```
 
-Using pip inside an existing Python environment:
-
-```bash
-pip install -r requirements.txt
-```
-
-For editable installation:
+Alternatively:
 
 ```bash
 pip install -e .
 ```
 
-## Example command
-
-Linux/macOS:
+## Example
 
 ```bash
-python -m colletotrichum_sublineola_pipeline.run \
-  --alignment path/to/csub_alignment.fas \
-  --virulence-table path/to/csublineola_RS_table_30x18.csv \
-  --output outputs/colletotrichum_sublineola_results.xlsx
+python -m csublineola_marker_virulence.cli \
+  --alignment path/to/marker_alignment.fas \
+  --virulence-table path/to/virulence_matrix.csv \
+  --output outputs/csublineola_marker_virulence_results.xlsx
 ```
 
 Windows Anaconda Prompt:
 
 ```bash
-python -m colletotrichum_sublineola_pipeline.run --alignment "path\to\csub_alignment.fas" --virulence-table "path\to\csublineola_RS_table_30x18.csv" --output "outputs\colletotrichum_sublineola_results.xlsx"
+python -m csublineola_marker_virulence.cli --alignment "path\to\marker_alignment.fas" --virulence-table "path\to\virulence_matrix.csv" --output "outputs\csublineola_marker_virulence_results.xlsx"
 ```
 
-To view all command-line options:
+## Output workbook
 
-```bash
-python -m colletotrichum_sublineola_pipeline.run --help
-```
+The output workbook contains:
 
-## Main outputs
+- dataset, isolate, and marker-position summaries
+- published R/S virulence profiles and pathotype assignments
+- pairwise marker and virulence distances
+- merged marker–virulence pair data
+- Pearson and Spearman matrix-correlation permutation tests
+- a permutation comparison of within- and between-pathotype marker distances
 
-The workflow writes one Excel workbook containing:
+No plotting or manuscript-writing code is included.
 
-- sequence and isolate summaries
-- pairwise genetic distance matrices and pair tables
-- virulence profile summaries
-- pairwise virulence distance matrices and pair tables
-- distance relationship summaries
-- pathotype and profile separation tests
-- host-specific separation tests
-- site-by-host association results
-- nearest-neighbor recovery summaries
-- compact analysis summary tables
+## Reproducibility
 
-## Analysis rules
-
-- Pairwise genetic distance is calculated by pairwise deletion of non-canonical characters.
-- Canonical DNA bases are `A`, `C`, `G`, and `T`.
-- Gaps and ambiguous characters are excluded from pairwise genetic distance calculations.
-- Virulence distances are calculated from observed `R` and `S` values only.
-- Permutation-based analyses use a fixed base random seed by default and deterministic offsets across analysis modules.
-- No plotting code is included.
-- Final outputs are exported as Excel workbooks.
-
-## Data availability
-
-Input data are not bundled with this repository unless permitted by the relevant data source. The associated manuscript and supplementary data file should be cited for the complete analytical output workbook.
+Permutation counts and the random seed are command-line options. The default analysis uses 5,000 permutations and a fixed seed.
 
 ## License
 
-This code is released under the MIT License. See `LICENSE` for details.
+MIT License. See `LICENSE`.
