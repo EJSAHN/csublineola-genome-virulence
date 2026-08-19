@@ -3,20 +3,25 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "csublineola-marker-virulence"
-version = "1.0.1"
-description = "Reproducible analysis of RAD-seq-derived marker profiles and differential-host virulence phenotypes in Colletotrichum sublineola."
+name = "csublineola-snp-virulence"
+version = "1.0.0"
+description = "Reproducible analysis of RAD-seq marker relatedness, geographic structure, virulence profiles, and isolate-panel design in Colletotrichum sublineola"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-  "pandas>=2.1",
-  "numpy>=1.26",
-  "openpyxl>=3.1",
-  "biopython>=1.83",
+  "numpy>=1.26,<3",
+  "pandas>=2.1,<3",
+  "scipy>=1.12,<2",
 ]
 
 [project.scripts]
-csublineola-marker-virulence = "csublineola_marker_virulence.cli:main"
+csub-snp-virulence = "csub_snp_virulence.cli:main"
 
 [tool.setuptools]
-packages = ["csublineola_marker_virulence"]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.urls]
+Repository = "https://github.com/EJSAHN/csublineola-genome-virulence"
