@@ -1,60 +1,74 @@
-# C. sublineola marker–virulence concordance pipeline
+# csublineola-genome-virulence
 
-This repository contains the reproducible Python workflow used to compare a processed RAD-seq-derived marker alignment with differential-host virulence phenotypes in a defined *Colletotrichum sublineola* isolate panel.
+Reproducible analysis of RAD-seq marker relatedness, geographic structure, virulence-profile concordance, and isolate-panel design in *Colletotrichum sublineola*.
 
-The workflow calculates pairwise marker distances, pairwise virulence distances, permutation-based matrix correlations, and within- versus between-pathotype marker-distance summaries. It does **not** treat alignment columns as validated genomic coordinates and does not perform marker-discovery or causal-association analyses.
+## Analyses
 
-## Required inputs
+- validation and filtering of a 7,398-marker HapMap table
+- reconstruction of 1,244-, 1,135-, and 400-marker panels
+- direct allele-sharing (IBS) distances
+- Pearson and Spearman matrix-concordance tests
+- pathotype-separation permutation tests
+- multiscale graph correlation
+- PERMANOVA, PERMDISP, and within-origin versus between-origin contrasts
+- nearest-neighbor prediction with unrestricted and origin-stratified null models
+- isolate-panel coverage and augmentation analyses
 
-1. An equal-length FASTA alignment containing isolate marker profiles.
-2. A CSV, TSV, or Excel table containing an isolate identifier, an optional pathotype label, and host-differential responses encoded as `R` or `S`.
-
-Input data are not bundled with this repository because redistribution requires authorization from the original data custodians.
-
-## Environment
+## Installation
 
 ```bash
 conda env create -f environment.yml
-conda activate csublineola-marker-virulence
+conda run -n csub_snp_virulence python -m unittest discover -s tests -v
 ```
 
 Alternatively:
 
 ```bash
-pip install -e .
+python -m pip install .
 ```
 
-## Example
+## Usage
 
 ```bash
-python -m csublineola_marker_virulence.cli \
-  --alignment path/to/marker_alignment.fas \
-  --virulence-table path/to/virulence_matrix.csv \
-  --output outputs/csublineola_marker_virulence_results.xlsx
+csub-snp-virulence \
+  --hapmap /path/to/C_sublineola_140_isolates_7398_markers.hmp.txt \
+  --output /path/to/results \
+  --mode full \
+  --seed 1729
 ```
 
-Windows Anaconda Prompt:
+An optional 400-marker validation panel can be supplied in HapMap format:
 
 ```bash
-python -m csublineola_marker_virulence.cli --alignment "path\to\marker_alignment.fas" --virulence-table "path\to\virulence_matrix.csv" --output "outputs\csublineola_marker_virulence_results.xlsx"
+csub-snp-virulence \
+  --hapmap /path/to/C_sublineola_140_isolates_7398_markers.hmp.txt \
+  --validation-panel /path/to/C_sublineola_140_isolates_400_low_missing_markers.hmp.txt \
+  --output /path/to/results \
+  --mode full \
+  --seed 1729
 ```
 
-## Output workbook
+`--mode full` uses 20,000 permutations; `--mode fast` uses 1,000.
 
-The output workbook contains:
+## Inputs
 
-- dataset, isolate, and marker-position summaries
-- published R/S virulence profiles and pathotype assignments
-- pairwise marker and virulence distances
-- merged marker–virulence pair data
-- Pearson and Spearman matrix-correlation permutation tests
-- a permutation comparison of within- and between-pathotype marker distances
+The public 30-isolate by 18-host virulence matrix and the 140-isolate metadata table are included under `data/`. Genotype files are not bundled with this repository.
 
-No plotting or manuscript-writing code is included.
+The primary genotype input is a HapMap table containing marker identifiers, scaffold positions, alleles, missing-call counts, and isolate genotype calls. The optional validation panel is used only to verify exact recovery of the 400-marker low-missingness subset.
 
-## Reproducibility
+## Outputs
 
-Permutation counts and the random seed are command-line options. The default analysis uses 5,000 permutations and a fixed seed.
+The pipeline writes CSV tables, distance matrices, filtered HapMap files, permutation distributions, software versions, execution logs, and SHA-256 checksums. Plotting code is not included.
+
+## Data source
+
+Prom LK, Ahn EJS, Perumal R, Cuevas HE, Rooney WL, Isakeit TS, Magill CW. 2024. Genetic Diversity and Classification of *Colletotrichum sublineola* Pathotypes Using a Standard Set of Sorghum Differentials. *Journal of Fungi* 10:3. DOI: `10.3390/jof10010003`.
+
+USDA Ag Data Commons: `10.15482/USDA.ADC/25988122.v1`.
+
+## Citation
+
+Citation metadata are provided in `CITATION.cff`.
 
 ## License
 
